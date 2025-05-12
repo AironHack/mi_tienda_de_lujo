@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>LUXURY TECH STORE - Sistema de Pedidos</title>
+  <style>
+    :root {
+      --primary: #0ff0fc;
+      --secondary: #ff2a6d;
+      --tertiary: #05d9e8;
+      --dark: #0d0221;
+      --darker: #05010a;
+      --light: #d1f7ff;
+      --neon-glow: 0 0 10px var(--primary), 0 0 20px var(--primary), 0 0 30px var(--primary);
+      --neon-pink-glow: 0 0 10px var(--secondary), 0 0 20px var(--secondary);
+      --transition-fast: all 0.3s ease;
+      --transition-slow: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', 'Arial Narrow', sans-serif;
+      background-color: var(--dark);
+      color: var(--light);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(5, 217, 232, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(255, 42, 109, 0.1) 0%, transparent 20%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    @font-face {
+      font-family: 'Orbitron';
+      src: url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: rgba(13, 2, 33, 0.8);
+      padding: 25px;
+      border-radius: 12px;
+      border: 1px solid var(--tertiary);
+      box-shadow: var(--neon-glow);
+      backdrop-filter: blur(5px);
+      transition: var(--transition-slow);
+    }
+
+    .container:hover {
+      box-shadow: 0 0 15px var(--primary), 0 0 30px var(--primary), 0 0 45px var(--primary);
+    }
+
+    h2, h3, h4 {
+      text-align: center;
+      color: var(--primary);
+      margin: 20px 0;
+      text-shadow: 0 0 5px var(--primary);
+      letter-spacing: 2px;
+      font-weight: 700;
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    h2::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      margin: 10px auto;
+      border-radius: 3px;
+      box-shadow: var(--neon-pink-glow);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 15px 0;
+      border-radius: 6px;
+      border: 1px solid var(--tertiary);
+      background-color: rgba(5, 217, 232, 0.1);
+      color: var(--light);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      transition: var(--transition-fast);
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: var(--neon-glow);
+      background-color: rgba(5, 217, 232, 0.2);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border-radius: 6px;
+      border: none;
+      background: linear-gradient(135deg, var(--primary), var(--tertiary));
+      color: var(--darker);
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      transition: var(--transition-slow);
+      z-index: -1;
+    }
+
+    button:hover {
+      color: var(--light);
+      box-shadow: var(--neon-glow);
+      transform: translateY(-3px);
+    }
+
+    button:hover::before {
+      left: 0;
+    }
+
+    nav.menu {
+      background: linear-gradient(90deg, rgba(5, 217, 232, 0.2), rgba(255, 42, 109, 0.2));
+      padding: 0;
+      border-radius: 6px;
+      border: 1px solid var(--tertiary);
+      box-shadow: 0 0 10px rgba(5, 217, 232, 0.5);
+      margin-bottom: 30px;
+    }
+
+    nav.menu ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav.menu li {
+      flex: 1;
+      position: relative;
+    }
+
+    nav.menu li::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 15%;
+      height: 70%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--tertiary), transparent);
+    }
+
+    nav.menu li:last-child::after {
+      display: none;
+    }
+
+    nav.menu a {
+      color: var(--light);
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      padding: 15px;
+      transition: var(--transition-fast);
+      font-weight: bold;
+      letter-spacing: 1px;
+      position: relative;
+    }
+
+    nav.menu a::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 3px;
+      background: var(--secondary);
+      transition: var(--transition-fast);
+    }
+
+    nav.menu a:hover {
+      color: var(--primary);
+      text-shadow: 0 0 5px var(--primary);
+    }
+
+    nav.menu a:hover::before {
+      width: 80%;
+      box-shadow: var(--neon-pink-glow);
+    }
+
+    .seccion {
+      display: none;
+      margin-top: 20px;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #mensaje-error {
+      color: var(--secondary);
+      text-align: center;
+      font-weight: bold;
+      text-shadow: 0 0 5px var(--secondary);
+      margin: 15px 0;
+    }
+
+    .grafico {
+      text-align: center;
+      margin: 30px 0;
+      padding: 20px;
+      background: rgba(5, 217, 232, 0.05);
+      border-radius: 8px;
+      border: 1px solid rgba(5, 217, 232, 0.2);
+    }
+    
+    /* Estilos para el catálogo de productos futurista */
+    .categorias-tabs {
+      display: flex;
+      background: rgba(5, 217, 232, 0.1);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 25px;
+      border: 1px solid var(--tertiary);
+      box-shadow: 0 0 10px rgba(5, 217, 232, 0.2);
+    }
+
+    .categoria-tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      position: relative;
+      color: var(--light);
+      font-weight: bold;
+    }
+
+    .categoria-tab:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 20%;
+      height: 60%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--tertiary), transparent);
+    }
+
+    .categoria-tab.active {
+      background: linear-gradient(135deg, rgba(5, 217, 232, 0.3), rgba(255, 42, 109, 0.3));
+      color: var(--primary);
+      text-shadow: 0 0 5px var(--primary);
+    }
+
+    .categoria-tab:hover {
+      background: rgba(5, 217, 232, 0.2);
+      color: var(--tertiary);
+    }
+
+    .productos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .producto-card {
+      border: 1px solid var(--tertiary);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      transition: var(--transition-slow);
+      background: rgba(13, 2, 33, 0.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .producto-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      z-index: -1;
+      background: linear-gradient(45deg, var(--primary), var(--secondary), var(--tertiary));
+      background-size: 200% 200%;
+      border-radius: 10px;
+      animation: gradientBorder 4s ease infinite;
+      opacity: 0;
+      transition: var(--transition-fast);
+    }
+
+    @keyframes gradientBorder {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .producto-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(5, 217, 232, 0.3);
+    }
+
+    .producto-card:hover::before {
+      opacity: 1;
+    }
+
+    .producto-imagen {
+      height: 120px;
+      width: 120px;
+      background: rgba(5, 217, 232, 0.1);
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: var(--primary);
+      border: 2px solid var(--tertiary);
+      transition: var(--transition-fast);
+    }
+
+    .producto-card:hover .producto-imagen {
+      transform: scale(1.1);
+      box-shadow: var(--neon-glow);
+      background: rgba(255, 42, 109, 0.1);
+    }
+
+    .producto-nombre {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: var(--primary);
+      font-size: 18px;
+      transition: var(--transition-fast);
+    }
+
+    .producto-card:hover .producto-nombre {
+      color: var(--secondary);
+      text-shadow: 0 0 5px var(--secondary);
+    }
+
+    .producto-precio {
+      color: var(--tertiary);
+      font-weight: bold;
+      margin-bottom: 15px;
+      font-size: 20px;
+      transition: var(--transition-fast);
+    }
+
+    .producto-card:hover .producto-precio {
+      color: var(--light);
+      text-shadow: 0 0 5px var(--primary);
+    }
+
+    .producto-card button {
+      background: linear-gradient(135deg, rgba(5, 217, 232, 0.8), rgba(5, 217, 232, 0.4));
+      color: var(--light);
+      font-size: 14px;
+      padding: 8px;
+      margin: 0;
+    }
+
+    .producto-card button:hover {
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+    }
+    
+    /* Estilos futuristas para el carrito */
+    .carrito-container {
+      background: rgba(13, 2, 33, 0.7);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 30px;
+      border: 1px solid var(--tertiary);
+      box-shadow: 0 0 15px rgba(5, 217, 232, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carrito-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, transparent 65%, rgba(5, 217, 232, 0.05) 100%);
+      z-index: -1;
+    }
+
+    .carrito-titulo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(5, 217, 232, 0.3);
+    }
+
+    .carrito-titulo h4 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--secondary);
+      text-shadow: var(--neon-pink-glow);
+    }
+
+    .carrito-titulo span {
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .carrito-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(5, 217, 232, 0.1);
+      transition: var(--transition-fast);
+    }
+
+    .carrito-item:hover {
+      background: rgba(5, 217, 232, 0.05);
+    }
+
+    .carrito-item:last-child {
+      border-bottom: none;
+    }
+
+    .carrito-item > div:first-child {
+      flex: 2;
+      color: var(--light);
+    }
+
+    .carrito-item > div:nth-child(2) {
+      flex: 1;
+      text-align: center;
+      color: var(--tertiary);
+      font-weight: bold;
+    }
+
+    .carrito-item > div:last-child {
+      flex: 1;
+      text-align: right;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .carrito-cantidad {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .carrito-cantidad button {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      font-size: 16px;
+      line-height: 1;
+      margin: 0 5px;
+      background: rgba(5, 217, 232, 0.3);
+      color: var(--light);
+      border-radius: 4px;
+    }
+
+    .carrito-cantidad button:hover {
+      background: var(--secondary);
+      transform: none;
+    }
+
+    .carrito-cantidad span {
+      margin: 0 10px;
+      font-weight: bold;
+      color: var(--light);
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .carrito-total {
+      text-align: right;
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 22px;
+      color: var(--primary);
+      padding-top: 15px;
+      border-top: 1px solid rgba(5, 217, 232, 0.3);
+    }
+
+    .carrito-acciones {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 15px;
+    }
+
+    .carrito-acciones button {
+      width: 50%;
+      margin: 0;
+    }
+
+    .btn-vaciar {
+      background: linear-gradient(135deg, rgba(255, 42, 109, 0.8), rgba(255, 42, 109, 0.4)) !important;
+    }
+
+    .btn-vaciar:hover {
+      background: linear-gradient(135deg, var(--secondary), #ff6b9d) !important;
+    }
+
+    .carrito-vacio {
+      text-align: center;
+      padding: 30px;
+      color: var(--tertiary);
+      font-style: italic;
+    }
+    
+    /* Indicador de cantidad en carrito */
+    .cantidad-badge {
+      display: inline-block;
+      min-width: 24px;
+      height: 24px;
+      line-height: 24px;
+      text-align: center;
+      border-radius: 12px;
+      background: var(--secondary);
+      color: white;
+      font-size: 12px;
+      margin-left: 10px;
+      font-weight: bold;
+      box-shadow: var(--neon-pink-glow);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    /* Estilos para listas de pedidos */
+    #estadoPedidos, #todosPedidos, #listaUsuarios {
+      list-style: none;
+    }
+
+    #estadoPedidos li, #todosPedidos li, #listaUsuarios li {
+      background: rgba(5, 217, 232, 0.05);
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border-left: 3px solid var(--tertiary);
+      transition: var(--transition-fast);
+    }
+
+    #estadoPedidos li:hover, #todosPedidos li:hover, #listaUsuarios li:hover {
+      background: rgba(5, 217, 232, 0.1);
+      border-left: 3px solid var(--secondary);
+      transform: translateX(5px);
+    }
+
+    #estadoPedidos li strong, #todosPedidos li strong {
+      color: var(--primary);
+    }
+
+    .acciones-pedido {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .acciones-pedido button {
+      flex: 1;
+      min-width: 120px;
+      padding: 8px;
+      font-size: 12px;
+      margin: 0;
+    }
+
+    /* Efectos de carga y animaciones */
+    @keyframes scanline {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100%); }
+    }
+
+    .scanlines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      background: linear-gradient(
+        to bottom,
+        transparent 50%,
+        rgba(5, 217, 232, 0.03) 51%
+      );
+      background-size: 100% 4px;
+      animation: scanline 8s linear infinite;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav.menu ul {
+        flex-direction: column;
+      }
+      
+      nav.menu li::after {
+        display: none;
+      }
+      
+      .productos-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+      
+      .carrito-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .carrito-item > div {
+        width: 100%;
+        text-align: left !important;
+        margin-bottom: 5px;
+      }
+      
+      .carrito-cantidad {
+        justify-content: flex-start;
+      }
+      
+      .acciones-pedido button {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  
+  <div class="container" id="login">
+    <h2>LUXURY TECH STORE</h2>
+    <input type="text" id="usuario" placeholder="Usuario">
+    <input type="password" id="clave" placeholder="Contraseña">
+    <button onclick="iniciarSesion()">Ingresar</button>
+    <p id="mensaje-error"></p>
+  </div>
+
+  <div class="container" id="dashboard" style="display:none;">
+    <nav class="menu">
+      <ul id="menu"></ul>
+    </nav>
+
+    <div id="crear" class="seccion">
+      <h3>Catálogo de Productos <span id="carrito-contador" class="cantidad-badge">0</span></h3>
+      
+      <div class="categorias-tabs" id="categorias-container">
+        <!-- Las pestañas de categorías se generarán dinámicamente -->
+      </div>
+      
+      <div class="productos-grid" id="productos-container">
+        <!-- Los productos se generarán dinámicamente -->
+      </div>
+      
+      <div class="carrito-container">
+        <div class="carrito-titulo">
+          <h4>Mi Carrito</h4>
+          <span id="carrito-items-count">0 items</span>
+        </div>
+        <div id="carrito-items">
+          <!-- Los items del carrito se generarán dinámicamente -->
+          <div class="carrito-vacio">El carrito está vacío</div>
+        </div>
+        <div class="carrito-total">
+          Total: <span id="carrito-total">S/0.00</span>
+        </div>
+        <div class="carrito-acciones">
+          <button class="btn-vaciar" onclick="vaciarCarrito()">Vaciar Carrito</button>
+          <button onclick="confirmarPedido()">Confirmar Pedido</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="estado" class="seccion">
+      <h3>Estado de pedidos</h3>
+      <ul id="estadoPedidos"></ul>
+    </div>
+
+    <div id="listado" class="seccion">
+      <h3>Listado de todos los pedidos</h3>
+      <ul id="todosPedidos"></ul>
+    </div>
+
+    <div id="usuarios" class="seccion">
+      <h3>Gestionar usuarios</h3>
+      <input type="text" id="nuevoUsuario" placeholder="Nuevo usuario">
+      <input type="password" id="nuevaClave" placeholder="Contraseña">
+      <select id="nuevoRol">
+        <option value="cliente">Cliente</option>
+        <option value="admin">Administrador</option>
+      </select>
+      <button onclick="crearUsuario()">Crear usuario</button>
+      <ul id="listaUsuarios"></ul>
+    </div>
+
+    <div id="graficos" class="seccion">
+      <h3>Estadísticas</h3>
+      <div class="grafico">
+        <canvas id="graficoPedidos" width="400" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Usuarios con roles y contraseñas para validación (simulado)
+    const usuarios = {
+      admin: { pass: "1234", rol: "admin" },
+      cliente: { pass: "1111", rol: "cliente" }
+    };
+
+    // Catálogo de productos simulado en soles peruanos (PEN)
+    const catalogo = {
+      "Tecnología": [
+        { id: 1, nombre: "iPhone 15 Pro Max", precio: 5999, imagen: "📱" },
+        { id: 2, nombre: "MacBook Pro 16\"", precio: 8999, imagen: "💻" },
+        { id: 3, nombre: "Apple Watch Ultra", precio: 3499, imagen: "⌚" },
+        { id: 4, nombre: "Samsung QLED 85\"", precio: 12999, imagen: "📺" },
+        { id: 5, nombre: "PlayStation 5 Pro", precio: 3999, imagen: "🎮" },
+        { id: 6, nombre: "Dron DJI Mavic 3", precio: 7999, imagen: "🚁" }
+      ],
+      "Moda de Lujo": [
+        { id: 7, nombre: "Reloj Rolex Submariner", precio: 24999, imagen: "⌚" },
+        { id: 8, nombre: "Bolso Louis Vuitton", precio: 8999, imagen: "👜" },
+        { id: 9, nombre: "Zapatos Gucci", precio: 3499, imagen: "👞" },
+        { id: 10, nombre: "Gafas Ray-Ban Aviator", precio: 1299, imagen: "🕶️" },
+        { id: 11, nombre: "Chaqueta Prada", precio: 5999, imagen: "🧥" },
+        { id: 12, nombre: "Cinturón Hermès", precio: 2499, imagen: "🧵" }
+      ],
+      "Autos de Lujo": [
+        { id: 13, nombre: "Lamborghini Huracán", precio: 1500000, imagen: "🚗" },
+        { id: 14, nombre: "Ferrari 488 GTB", precio: 1300000, imagen: "🏎️" },
+        { id: 15, nombre: "Porsche 911 Turbo S", precio: 899999, imagen: "🚙" },
+        { id: 16, nombre: "Mercedes-Benz G63 AMG", precio: 799999, imagen: "🚘" },
+        { id: 17, nombre: "Range Rover Autobiography", precio: 699999, imagen: "🚙" },
+        { id: 18, nombre: "Tesla Model X Plaid", precio: 599999, imagen: "🚗" }
+      ],
+      "Motos Deportivas": [
+        { id: 19, nombre: "Ducati Panigale V4", precio: 89999, imagen: "🏍️" },
+        { id: 20, nombre: "Kawasaki Ninja H2R", precio: 129999, imagen: "🛵" },
+        { id: 21, nombre: "BMW S1000RR", precio: 79999, imagen: "🏍️" },
+        { id: 22, nombre: "Harley-Davidson CVO", precio: 69999, imagen: "🛵" },
+        { id: 23, nombre: "Yamaha YZF-R1", precio: 59999, imagen: "🏍️" },
+        { id: 24, nombre: "Honda CBR1000RR", precio: 54999, imagen: "🏍️" }
+      ]
+    };
+
+    let usuarioActivo = null;
+    let pedidos = [];
+    let carrito = [];
+    let categoriaActual = "Tecnología"; // Categoría por defecto
+
+    function iniciarSesion() {
+      const user = document.getElementById("usuario").value;
+      const pass = document.getElementById("clave").value;
+
+      // Simulación de la autenticación con backend
+      if (usuarios[user] && usuarios[user].pass === pass) {
+        usuarioActivo = { nombre: user, rol: usuarios[user].rol };
+        sessionStorage.setItem("usuarioActivo", JSON.stringify(usuarioActivo)); // Guardamos sesión
+        document.getElementById("login").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+        construirMenu();
+        mostrarSeccion('crear'); // Mostrar directamente la sección de crear pedido
+      } else {
+        document.getElementById("mensaje-error").textContent = "Credenciales incorrectas";
+      }
+    }
+
+    function construirMenu() {
+      const menu = document.getElementById("menu");
+      menu.innerHTML = `
+        <li><a href="#" onclick="mostrarSeccion('crear')">Crear Pedido</a></li>
+        <li><a href="#" onclick="mostrarSeccion('estado')">Mis Pedidos</a></li>
+        ${usuarioActivo.rol === 'admin' ? '<li><a href="#" onclick="mostrarSeccion(\'listado\')">Ver Todos</a></li>' : ''}
+        ${usuarioActivo.rol === 'admin' ? '<li><a href="#" onclick="mostrarSeccion(\'usuarios\')">Usuarios</a></li>' : ''}
+        ${usuarioActivo.rol === 'admin' ? '<li><a href="#" onclick="mostrarSeccion(\'graficos\')">Estadísticas</a></li>' : ''}
+        <li><a href="#" onclick="cerrarSesion()">Salir</a></li>
+      `;
+    }
+
+    function cerrarSesion() {
+      usuarioActivo = null;
+      carrito = [];
+      sessionStorage.removeItem("usuarioActivo");
+      document.getElementById("dashboard").style.display = "none";
+      document.getElementById("login").style.display = "block";
+    }
+
+    function mostrarSeccion(id) {
+      document.querySelectorAll(".seccion").forEach(s => s.style.display = "none");
+      document.getElementById(id).style.display = "block";
+      
+      if (id === 'crear') {
+        // Inicializar el catálogo de productos
+        inicializarCatalogo();
+      }
+      if (id === 'estado') mostrarPedidosUsuario();
+      if (id === 'listado') mostrarTodosPedidos();
+      if (id === 'usuarios') mostrarUsuarios();
+      if (id === 'graficos') dibujarGrafico();
+    }
+
+    function inicializarCatalogo() {
+      // Crear pestañas de categorías
+      const categoriasContainer = document.getElementById("categorias-container");
+      categoriasContainer.innerHTML = '';
+      
+      Object.keys(catalogo).forEach((categoria, index) => {
+        const tab = document.createElement('div');
+        tab.className = `categoria-tab ${categoria === categoriaActual ? 'active' : ''}`;
+        tab.textContent = categoria;
+        tab.onclick = () => cambiarCategoria(categoria);
+        categoriasContainer.appendChild(tab);
+      });
+      
+      // Mostrar productos de la categoría actual
+      mostrarProductosCategoria(categoriaActual);
+      
+      // Actualizar carrito
+      actualizarCarritoUI();
+    }
+
+    function cambiarCategoria(categoria) {
+      categoriaActual = categoria;
+      
+      // Actualizar pestañas activas
+      document.querySelectorAll('.categoria-tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.textContent === categoria) {
+          tab.classList.add('active');
+        }
+      });
+      
+      // Mostrar productos de la categoría seleccionada
+      mostrarProductosCategoria(categoria);
+    }
+
+    function mostrarProductosCategoria(categoria) {
+      const productosContainer = document.getElementById("productos-container");
+      productosContainer.innerHTML = '';
+      
+      catalogo[categoria].forEach(producto => {
+        const card = document.createElement('div');
+        card.className = 'producto-card';
+        card.innerHTML = `
+          <div class="producto-imagen">${producto.imagen}</div>
+          <div class="producto-nombre">${producto.nombre}</div>
+          <div class="producto-precio">S/${producto.precio.toFixed(2)}</div>
+          <button onclick="agregarAlCarrito(${producto.id})">Añadir al carrito</button>
+        `;
+        productosContainer.appendChild(card);
+      });
+    }
+
+    function buscarProductoPorId(id) {
+      for (const categoria in catalogo) {
+        const producto = catalogo[categoria].find(p => p.id === id);
+        if (producto) return producto;
+      }
+      return null;
+    }
+
+    function agregarAlCarrito(productoId) {
+      const producto = buscarProductoPorId(productoId);
+      if (!producto) return;
+      
+      // Verificar si el producto ya está en el carrito
+      const index = carrito.findIndex(item => item.id === productoId);
+      
+      if (index !== -1) {
+        carrito[index].cantidad++;
+      } else {
+        carrito.push({
+          id: producto.id,
+          nombre: producto.nombre,
+          precio: producto.precio,
+          cantidad: 1
+        });
+      }
+      
+      actualizarCarritoUI();
+    }
+
+    function cambiarCantidad(productoId, cambio) {
+      const index = carrito.findIndex(item => item.id === productoId);
+      if (index === -1) return;
+      
+      carrito[index].cantidad += cambio;
+      
+      if (carrito[index].cantidad <= 0) {
+        carrito.splice(index, 1);
+      }
+      
+      actualizarCarritoUI();
+    }
+
+    function vaciarCarrito() {
+      carrito = [];
+      actualizarCarritoUI();
+    }
+
+    function actualizarCarritoUI() {
+      const carritoItems = document.getElementById("carrito-items");
+      const carritoItemsCount = document.getElementById("carrito-items-count");
+      const carritoTotal = document.getElementById("carrito-total");
+      const carritoContador = document.getElementById("carrito-contador");
+      
+      // Contador de elementos en carrito (para el badge)
+      const totalItems = carrito.reduce((total, item) => total + item.cantidad, 0);
+      carritoContador.textContent = totalItems;
+      
+      if (carrito.length === 0) {
+        carritoItems.innerHTML = '<div class="carrito-vacio">El carrito está vacío</div>';
+        carritoItemsCount.textContent = '0 items';
+        carritoTotal.textContent = 'S/0.00';
+        return;
+      }
+      
+      // Actualizar contador de items
+      carritoItemsCount.textContent = `${totalItems} item${totalItems !== 1 ? 's' : ''}`;
+      
+      // Generar HTML para los items del carrito
+      carritoItems.innerHTML = carrito.map(item => `
+        <div class="carrito-item">
+          <div>${item.nombre}</div>
+          <div>S/${item.precio.toFixed(2)}</div>
+          <div class="carrito-cantidad">
+            <button onclick="cambiarCantidad(${item.id}, -1)">-</button>
+            <span>${item.cantidad}</span>
+            <button onclick="cambiarCantidad(${item.id}, 1)">+</button>
+          </div>
+          <div>S/${(item.precio * item.cantidad).toFixed(2)}</div>
+        </div>
+      `).join('');
+      
+      // Calcular y mostrar el total
+      const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+      carritoTotal.textContent = `S/${total.toFixed(2)}`;
+    }
+
+    function confirmarPedido() {
+      if (carrito.length > 0) {
+        // Convertir el carrito al formato necesario para el histórico de pedidos
+        const itemsPedido = carrito.map(item => ({
+          producto: item.nombre,
+          cantidad: item.cantidad
+        }));
+        
+        pedidos.push({ 
+          usuario: usuarioActivo.nombre, 
+          items: itemsPedido, 
+          estado: "En preparación",
+          fecha: new Date().toLocaleString(),
+          total: carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0)
+        });
+        
+        alert("¡Pedido confirmado exitosamente!");
+        vaciarCarrito();
+      } else {
+        alert("El carrito está vacío. Añada productos antes de confirmar.");
+      }
+    }
+
+    function mostrarPedidosUsuario() {
+      const ul = document.getElementById("estadoPedidos");
+      const pedidosUsuario = pedidos.filter(p => p.usuario === usuarioActivo.nombre);
+      
+      if (pedidosUsuario.length === 0) {
+        ul.innerHTML = '<li class="no-pedidos">No tienes pedidos registrados.</li>';
+        return;
+      }
+      
+      ul.innerHTML = pedidosUsuario.map(p => `
+        <li>
+          <strong>Fecha:</strong> ${p.fecha}<br>
+          <strong>Productos:</strong> ${p.items.map(i => i.producto + ' (' + i.cantidad + ')').join(', ')}<br>
+          <strong>Estado:</strong> ${p.estado}<br>
+          <strong>Total:</strong> S/${p.total.toFixed(2)}
+        </li>
+      `).join('');
+    }
+
+    function mostrarTodosPedidos() {
+      const ul = document.getElementById("todosPedidos");
+      
+      if (pedidos.length === 0) {
+        ul.innerHTML = '<li class="no-pedidos">No hay pedidos registrados en el sistema.</li>';
+        return;
+      }
+      
+      ul.innerHTML = pedidos.map((p, index) => `
+        <li>
+          <strong>Usuario:</strong> ${p.usuario}<br>
+          <strong>Fecha:</strong> ${p.fecha}<br>
+          <strong>Productos:</strong> ${p.items.map(i => i.producto + ' (' + i.cantidad + ')').join(', ')}<br>
+          <strong>Estado:</strong> ${p.estado}<br>
+          <strong>Total:</strong> S/${p.total.toFixed(2)}<br>
+          <div class="acciones-pedido">
+            <button onclick="cambiarEstadoPedido(${index}, 'En preparación')">En preparación</button>
+            <button onclick="cambiarEstadoPedido(${index}, 'En tránsito')">En tránsito</button>
+            <button onclick="cambiarEstadoPedido(${index}, 'Entregado')">Entregado</button>
+            <button onclick="cambiarEstadoPedido(${index}, 'Cancelado')">Cancelado</button>
+            <button onclick="eliminarPedido(${index})">Eliminar</button>
+          </div>
+        </li>
+      `).join('');
+    }
+
+    function cambiarEstadoPedido(index, estado) {
+      pedidos[index].estado = estado;
+      mostrarTodosPedidos();  // Actualiza la vista de todos los pedidos
+    }
+
+    function eliminarPedido(index) {
+      pedidos.splice(index, 1);  // Elimina el pedido
+      mostrarTodosPedidos();  // Actualiza la vista
+    }
+
+    function crearUsuario() {
+      const nombre = document.getElementById("nuevoUsuario").value;
+      const clave = document.getElementById("nuevaClave").value;
+      const rol = document.getElementById("nuevoRol").value;
+      if (!usuarios[nombre]) {
+        usuarios[nombre] = { pass: clave, rol };
+        mostrarUsuarios();
+        alert("Usuario creado");
+      }
+    }
+
+    function mostrarUsuarios() {
+      const ul = document.getElementById("listaUsuarios");
+      ul.innerHTML = Object.keys(usuarios).map(u => `<li>${u} - ${usuarios[u].rol}</li>`).join('');
+    }
+
+    function dibujarGrafico() {
+      const ctx = document.getElementById("graficoPedidos").getContext("2d");
+      const datos = {};
+      pedidos.forEach(p => {
+        p.items.forEach(i => {
+          datos[i.producto] = (datos[i.producto] || 0) + parseInt(i.cantidad);
+        });
+      });
+      
+      // Destruir gráfico existente si hay uno
+      if (window.graficoActual) {
+        window.graficoActual.destroy();
+      }
+      
+      // Crear nuevo gráfico
+      window.graficoActual = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: Object.keys(datos),
+          datasets: [{
+            label: "Cantidad pedida",
+            data: Object.values(datos),
+            backgroundColor: "#0ff0fc",
+            borderColor: "#ff2a6d",
+            borderWidth: 1,
+            hoverBackgroundColor: "#ff2a6d"
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(5, 217, 232, 0.1)'
+              },
+              ticks: {
+                color: '#0ff0fc'
+              }
+            },
+            x: {
+              grid: {
+                color: 'rgba(5, 217, 232, 0.1)'
+              },
+              ticks: {
+                color: '#0ff0fc'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: {
+                color: '#0ff0fc',
+                font: {
+                  family: "'Orbitron', sans-serif"
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Verificar si hay una sesión activa al cargar la página
+    window.onload = function() {
+      const sesion = sessionStorage.getItem("usuarioActivo");
+      if (sesion) {
+        usuarioActivo = JSON.parse(sesion);
+        document.getElementById("login").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+        construirMenu();
+        mostrarSeccion('crear');
+      }
+      
+      // Efecto de texto futurista
+      const titulo = document.querySelector('#login h2');
+      if (titulo) {
+        let text = titulo.textContent;
+        titulo.textContent = '';
+        for (let i = 0; i < text.length; i++) {
+          setTimeout(() => {
+            titulo.textContent += text[i];
+          }, 100 * i);
+        }
+      }
+    };
+  </script>
+</body>
+</html>
